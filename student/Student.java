@@ -1,6 +1,4 @@
 
-package student;
-
 public class Student {
 
     private int studentId;
@@ -8,8 +6,7 @@ public class Student {
     private String email;
     private String phone;
 
-    public Student(int studentId, String name,
-                   String email, String phone) {
+    public Student(int studentId, String name, String email, String phone) {
         this.studentId = studentId;
         this.name = name;
         this.email = email;
