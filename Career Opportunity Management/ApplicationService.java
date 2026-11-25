@@ -5,12 +5,12 @@ public class ApplicationService {
 
     private ArrayList<Application> applications;
 
-    // Constructor
+  
     public ApplicationService() {
         applications = new ArrayList<>();
     }
 
-    // Submit a new application
+   
     public void submitApplication(Application application) {
 
         applications.add(application);
@@ -36,7 +36,7 @@ public class ApplicationService {
         System.out.println("Application not found!");
     }
 
-    // Display all applications
+   
     public void displayApplications() {
 
         if (applications.isEmpty()) {
