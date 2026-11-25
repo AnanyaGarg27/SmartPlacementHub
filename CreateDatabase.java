@@ -29,7 +29,104 @@ public class CreateDatabase {
             // Select database
             st.executeUpdate("USE SmartPlacementHub");
 
-            // Table 1: Recruitment Drive
+
+            // =====================================
+            // MEMBER 1 - STUDENT MANAGEMENT
+            // =====================================
+
+            // Table 1: Students
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS students (" +
+                "student_id INT PRIMARY KEY, " +
+                "name VARCHAR(100), " +
+                "email VARCHAR(100), " +
+                "phone VARCHAR(20))"
+            );
+
+            // Table 2: Academic Records
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS academic_records (" +
+                "student_id INT PRIMARY KEY, " +
+                "cgpa DOUBLE, " +
+                "branch VARCHAR(100), " +
+                "semester INT, " +
+                "backlogs INT, " +
+                "FOREIGN KEY (student_id) REFERENCES students(student_id))"
+            );
+
+            // Table 3: Skills
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS skills (" +
+                "skill_id INT PRIMARY KEY, " +
+                "skill_name VARCHAR(100))"
+            );
+
+            // Table 4: Student Skills
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS student_skills (" +
+                "student_id INT, " +
+                "skill_id INT, " +
+                "proficiency_level VARCHAR(50), " +
+                "PRIMARY KEY (student_id, skill_id), " +
+                "FOREIGN KEY (student_id) REFERENCES students(student_id), " +
+                "FOREIGN KEY (skill_id) REFERENCES skills(skill_id))"
+            );
+
+
+            // =====================================
+            // MEMBER 2 - COMPANY AND PLACEMENT
+            // =====================================
+
+            // Table 5: Companies
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS companies (" +
+                "company_id INT PRIMARY KEY, " +
+                "company_name VARCHAR(100), " +
+                "location VARCHAR(100), " +
+                "industry VARCHAR(100), " +
+                "email VARCHAR(100))"
+            );
+
+            // Table 6: Job Postings
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS job_postings (" +
+                "job_id INT PRIMARY KEY, " +
+                "company_id INT, " +
+                "job_role VARCHAR(100), " +
+                "salary DOUBLE, " +
+                "job_description TEXT, " +
+                "deadline VARCHAR(30), " +
+                "FOREIGN KEY (company_id) REFERENCES companies(company_id))"
+            );
+
+            // Table 7: Eligibility Criteria
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS eligibility_criteria (" +
+                "job_id INT PRIMARY KEY, " +
+                "minimum_cgpa DOUBLE, " +
+                "allowed_branches TEXT, " +
+                "maximum_backlogs INT, " +
+                "FOREIGN KEY (job_id) REFERENCES job_postings(job_id))"
+            );
+
+            // Table 8: Applications
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS applications (" +
+                "application_id INT PRIMARY KEY, " +
+                "student_id INT, " +
+                "job_id INT, " +
+                "application_date VARCHAR(30), " +
+                "status VARCHAR(50), " +
+                "FOREIGN KEY (student_id) REFERENCES students(student_id), " +
+                "FOREIGN KEY (job_id) REFERENCES job_postings(job_id))"
+            );
+
+
+            // =====================================
+            // MEMBER 3 - RECRUITMENT AND INTERVIEW
+            // =====================================
+
+            // Table 9: Recruitment Drive
             st.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS recruitment_drive (" +
                 "drive_id INT PRIMARY KEY AUTO_INCREMENT, " +
@@ -39,41 +136,45 @@ public class CreateDatabase {
                 "drive_date VARCHAR(30))"
             );
 
-            // Table 2: Interview Round
+            // Table 10: Interview Round
             st.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS interview_round (" +
-                "round_id INT PRIMARY KEY AUTO_INCREMENT, " +
-                "drive_id INT, " +
-                "round_name VARCHAR(100), " +
-                "round_date VARCHAR(30))"
+                "round_id INT PRIMARY KEY, " +
+                "company_name VARCHAR(100), " +
+                "round_name VARCHAR(100))"
             );
 
-            // Table 3: Interview Question
+            // Table 11: Interview Question
             st.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS interview_question (" +
                 "question_id INT PRIMARY KEY AUTO_INCREMENT, " +
                 "round_id INT, " +
-                "question_text VARCHAR(500))"
+                "question_text VARCHAR(500), " +
+                "FOREIGN KEY (round_id) REFERENCES interview_round(round_id))"
             );
 
-            // Table 4: Interview Experience
+            // Table 12: Interview Experience
             st.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS interview_experience (" +
                 "experience_id INT PRIMARY KEY AUTO_INCREMENT, " +
                 "student_id INT, " +
                 "drive_id INT, " +
                 "feedback VARCHAR(500), " +
-                "result VARCHAR(30))"
+                "result VARCHAR(30), " +
+                "FOREIGN KEY (student_id) REFERENCES students(student_id), " +
+                "FOREIGN KEY (drive_id) REFERENCES recruitment_drive(drive_id))"
             );
 
-            System.out.println("All Tables Created Successfully!");
 
+            System.out.println("\n==================================");
+            System.out.println("ALL 12 TABLES CREATED SUCCESSFULLY!");
+            System.out.println("==================================");
+
+            st.close();
             con.close();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Database Error: " + e.getMessage());
         }
     }
 }
-
-
