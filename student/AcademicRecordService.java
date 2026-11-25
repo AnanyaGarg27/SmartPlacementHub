@@ -1,6 +1,4 @@
-
-package student;
-
+        
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -9,33 +7,27 @@ public class AcademicRecordService {
     private final AcademicRecordDAO academicRecordDAO;
 
     public AcademicRecordService(Connection connection) {
-        this.academicRecordDAO =
-                new AcademicRecordDAO(connection);
+        this.academicRecordDAO = new AcademicRecordDAO(connection);
     }
 
-    public boolean addRecord(AcademicRecord record)
-            throws SQLException {
+    public boolean addRecord(AcademicRecord record) throws SQLException {
 
         if (!validateRecord(record)) {
             return false;
         }
 
-        if (academicRecordDAO.getAcademicRecord(
-                record.getStudentId()) != null) {
+        if (academicRecordDAO.getAcademicRecord(record.getStudentId()) != null) {
             return false;
         }
 
         return academicRecordDAO.addAcademicRecord(record);
     }
 
-    public AcademicRecord searchRecord(int studentId)
-            throws SQLException {
-
+    public AcademicRecord searchRecord(int studentId) throws SQLException {
         return academicRecordDAO.getAcademicRecord(studentId);
     }
 
-    public boolean updateRecord(AcademicRecord record)
-            throws SQLException {
+    public boolean updateRecord(AcademicRecord record) throws SQLException {
 
         if (!validateRecord(record)) {
             return false;
@@ -44,9 +36,7 @@ public class AcademicRecordService {
         return academicRecordDAO.updateAcademicRecord(record);
     }
 
-    public boolean deleteRecord(int studentId)
-            throws SQLException {
-
+    public boolean deleteRecord(int studentId) throws SQLException {
         return academicRecordDAO.deleteAcademicRecord(studentId);
     }
 
@@ -63,4 +53,3 @@ public class AcademicRecordService {
                 && !record.getBranch().trim().isEmpty();
     }
 }
-
