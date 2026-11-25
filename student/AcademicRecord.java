@@ -1,6 +1,4 @@
 
-package student;
-
 public class AcademicRecord {
 
     private int studentId;
@@ -9,9 +7,7 @@ public class AcademicRecord {
     private int semester;
     private int backlogs;
 
-    public AcademicRecord(int studentId, double cgpa,
-                          String branch, int semester,
-                          int backlogs) {
+    public AcademicRecord(int studentId, double cgpa, String branch, int semester, int backlogs) {
         this.studentId = studentId;
         this.cgpa = cgpa;
         this.branch = branch;
@@ -68,4 +64,3 @@ public class AcademicRecord {
                 + ", Backlogs: " + backlogs;
     }
 }
-
