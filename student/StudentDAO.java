@@ -1,10 +1,5 @@
 
-package student;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +11,11 @@ public class StudentDAO {
         this.connection = connection;
     }
 
-    
-    public boolean addStudent(Student student)
-            throws SQLException {
+    public boolean addStudent(Student student) throws SQLException {
 
-        String sql = "INSERT INTO students "
-                + "(student_id, name, email, phone) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO students (student_id, name, email, phone) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, student.getStudentId());
             ps.setString(2, student.getName());
@@ -36,14 +26,11 @@ public class StudentDAO {
         }
     }
 
-    public Student getStudentById(int studentId)
-            throws SQLException {
+    public Student getStudentById(int studentId) throws SQLException {
 
-        String sql = "SELECT * FROM students "
-                + "WHERE student_id = ?";
+        String sql = "SELECT * FROM students WHERE student_id = ?";
 
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, studentId);
 
@@ -63,15 +50,13 @@ public class StudentDAO {
         return null;
     }
 
-    public List<Student> getAllStudents()
-            throws SQLException {
+    public List<Student> getAllStudents() throws SQLException {
 
         List<Student> students = new ArrayList<>();
 
         String sql = "SELECT * FROM students";
 
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -87,16 +72,11 @@ public class StudentDAO {
         return students;
     }
 
+    public boolean updateStudent(Student student) throws SQLException {
 
-    public boolean updateStudent(Student student)
-            throws SQLException {
+        String sql = "UPDATE students SET name = ?, email = ?, phone = ? WHERE student_id = ?";
 
-        String sql = "UPDATE students "
-                + "SET name = ?, email = ?, phone = ? "
-                + "WHERE student_id = ?";
-
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, student.getName());
             ps.setString(2, student.getEmail());
@@ -107,15 +87,11 @@ public class StudentDAO {
         }
     }
 
+    public boolean deleteStudent(int studentId) throws SQLException {
 
-    public boolean deleteStudent(int studentId)
-            throws SQLException {
+        String sql = "DELETE FROM students WHERE student_id = ?";
 
-        String sql = "DELETE FROM students "
-                + "WHERE student_id = ?";
-
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, studentId);
 
