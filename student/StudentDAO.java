@@ -1,100 +1,57 @@
-import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class StudentDAO {
 
-    private final Connection connection;
+    private ArrayList<Student> students = new ArrayList<>();
 
-    public StudentDAO(Connection connection) {
-        this.connection = connection;
+    public boolean addStudent(Student student) {
+
+        students.add(student);
+        return true;
     }
 
-    public boolean addStudent(Student student) throws SQLException {
+    public Student getStudentById(int studentId) {
 
-        String sql = "INSERT INTO students (student_id, name, email, phone) VALUES (?, ?, ?, ?)";
+        for (Student student : students) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, student.getStudentId());
-            ps.setString(2, student.getName());
-            ps.setString(3, student.getEmail());
-            ps.setString(4, student.getPhone());
-
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    public Student getStudentById(int studentId) throws SQLException {
-
-        String sql = "SELECT * FROM students WHERE student_id = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, studentId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-
-                if (rs.next()) {
-                    return new Student(
-                        rs.getInt("student_id"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("phone")
-                    );
-                }
+            if (student.getStudentId() == studentId) {
+                return student;
             }
         }
 
         return null;
     }
 
-    public List<Student> getAllStudents() throws SQLException {
-
-        List<Student> students = new ArrayList<>();
-
-        String sql = "SELECT * FROM students";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                students.add(new Student(
-                    rs.getInt("student_id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("phone")
-                ));
-            }
-        }
+    public ArrayList<Student> getAllStudents() {
 
         return students;
     }
 
-    public boolean updateStudent(Student student) throws SQLException {
+    public boolean updateStudent(Student student) {
 
-        String sql = "UPDATE students SET name = ?, email = ?, phone = ? WHERE student_id = ?";
+        for (int i = 0; i < students.size(); i++) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (students.get(i).getStudentId() == student.getStudentId()) {
 
-            ps.setString(1, student.getName());
-            ps.setString(2, student.getEmail());
-            ps.setString(3, student.getPhone());
-            ps.setInt(4, student.getStudentId());
-
-            return ps.executeUpdate() > 0;
+                students.set(i, student);
+                return true;
+            }
         }
+
+        return false;
     }
 
-    public boolean deleteStudent(int studentId) throws SQLException {
+    public boolean deleteStudent(int studentId) {
 
-        String sql = "DELETE FROM students WHERE student_id = ?";
+        for (int i = 0; i < students.size(); i++) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (students.get(i).getStudentId() == studentId) {
 
-            ps.setInt(1, studentId);
-
-            return ps.executeUpdate() > 0;
+                students.remove(i);
+                return true;
+            }
         }
+
+        return false;
     }
 }
