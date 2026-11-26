@@ -1,6 +1,3 @@
-
-package student;
-
 public class Skill {
 
     private int skillId;
