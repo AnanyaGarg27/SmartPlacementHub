@@ -1,14 +1,10 @@
-
-package student;
-
 public class StudentSkill {
 
     private int studentId;
     private int skillId;
     private String proficiencyLevel;
 
-    public StudentSkill(int studentId, int skillId,
-                        String proficiencyLevel) {
+    public StudentSkill(int studentId, int skillId, String proficiencyLevel) {
         this.studentId = studentId;
         this.skillId = skillId;
         this.proficiencyLevel = proficiencyLevel;
