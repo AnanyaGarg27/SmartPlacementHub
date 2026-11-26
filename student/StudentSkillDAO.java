@@ -1,99 +1,63 @@
 
-package student;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class StudentSkillDAO {
 
-    private final Connection connection;
+    ArrayList<StudentSkill> skills = new ArrayList<>();
 
-    public StudentSkillDAO(Connection connection) {
-        this.connection = connection;
+    // Add Student Skill
+    public boolean addStudentSkill(StudentSkill skill) {
+
+        skills.add(skill);
+
+        return true;
     }
 
-    public boolean addStudentSkill(StudentSkill skill)
-            throws SQLException {
+    // Get Student Skills
+    public ArrayList<StudentSkill> getStudentSkills(int studentId) {
 
-        String sql = "INSERT INTO student_skills "
-                + "(student_id, skill_id, proficiency_level) "
-                + "VALUES (?, ?, ?)";
+        ArrayList<StudentSkill> result = new ArrayList<>();
 
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+        for (StudentSkill skill : skills) {
 
-            ps.setInt(1, skill.getStudentId());
-            ps.setInt(2, skill.getSkillId());
-            ps.setString(3, skill.getProficiencyLevel());
-
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    public List<StudentSkill> getStudentSkills(int studentId)
-            throws SQLException {
-
-        List<StudentSkill> skills = new ArrayList<>();
-
-        String sql = "SELECT * FROM student_skills "
-                + "WHERE student_id = ?";
-
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
-
-            ps.setInt(1, studentId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-
-                while (rs.next()) {
-                    skills.add(new StudentSkill(
-                        rs.getInt("student_id"),
-                        rs.getInt("skill_id"),
-                        rs.getString("proficiency_level")
-                    ));
-                }
+            if (skill.getStudentId() == studentId) {
+                result.add(skill);
             }
         }
 
-        return skills;
+        return result;
     }
 
-    public boolean updateStudentSkill(StudentSkill skill)
-            throws SQLException {
+    // Update Student Skill
+    public boolean updateStudentSkill(StudentSkill skill) {
 
-        String sql = "UPDATE student_skills "
-                + "SET proficiency_level = ? "
-                + "WHERE student_id = ? AND skill_id = ?";
+        for (int i = 0; i < skills.size(); i++) {
 
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+            if (skills.get(i).getStudentId() == skill.getStudentId()
+                    && skills.get(i).getSkillId() == skill.getSkillId()) {
 
-            ps.setString(1, skill.getProficiencyLevel());
-            ps.setInt(2, skill.getStudentId());
-            ps.setInt(3, skill.getSkillId());
-
-            return ps.executeUpdate() > 0;
+                skills.set(i, skill);
+                return true;
+            }
         }
+
+        return false;
     }
 
-    public boolean deleteStudentSkill(int studentId, int skillId)
-            throws SQLException {
+    // Delete Student Skill
+    public boolean deleteStudentSkill(int studentId, int skillId) {
 
-        String sql = "DELETE FROM student_skills "
-                + "WHERE student_id = ? AND skill_id = ?";
+        for (int i = 0; i < skills.size(); i++) {
 
-        try (PreparedStatement ps =
-                connection.prepareStatement(sql)) {
+            if (skills.get(i).getStudentId() == studentId
+                    && skills.get(i).getSkillId() == skillId) {
 
-            ps.setInt(1, studentId);
-            ps.setInt(2, skillId);
-
-            return ps.executeUpdate() > 0;
+                skills.remove(i);
+                return true;
+            }
         }
+
+        return false;
     }
 }
-
+```
