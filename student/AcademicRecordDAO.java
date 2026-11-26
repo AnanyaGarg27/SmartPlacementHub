@@ -1,80 +1,55 @@
-
-import java.sql.*;
+import java.util.ArrayList;
 
 public class AcademicRecordDAO {
 
-    private final Connection connection;
+    ArrayList<AcademicRecord> records = new ArrayList<>();
 
-    public AcademicRecordDAO(Connection connection) {
-        this.connection = connection;
+
+    public boolean addAcademicRecord(AcademicRecord record) {
+
+        records.add(record);
+
+        return true;
     }
 
-    public boolean addAcademicRecord(AcademicRecord record) throws SQLException {
 
-        String sql = "INSERT INTO academic_records (student_id, cgpa, branch, semester, backlogs) VALUES (?, ?, ?, ?, ?)";
+    public AcademicRecord getAcademicRecord(int studentId) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        for (AcademicRecord record : records) {
 
-            ps.setInt(1, record.getStudentId());
-            ps.setDouble(2, record.getCgpa());
-            ps.setString(3, record.getBranch());
-            ps.setInt(4, record.getSemester());
-            ps.setInt(5, record.getBacklogs());
-
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    public AcademicRecord getAcademicRecord(int studentId) throws SQLException {
-
-        String sql = "SELECT * FROM academic_records WHERE student_id = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, studentId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-
-                if (rs.next()) {
-                    return new AcademicRecord(
-                        rs.getInt("student_id"),
-                        rs.getDouble("cgpa"),
-                        rs.getString("branch"),
-                        rs.getInt("semester"),
-                        rs.getInt("backlogs")
-                    );
-                }
+            if (record.getStudentId() == studentId) {
+                return record;
             }
         }
 
         return null;
     }
 
-    public boolean updateAcademicRecord(AcademicRecord record) throws SQLException {
+    public boolean updateAcademicRecord(AcademicRecord record) {
 
-        String sql = "UPDATE academic_records SET cgpa = ?, branch = ?, semester = ?, backlogs = ? WHERE student_id = ?";
+        for (int i = 0; i < records.size(); i++) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (records.get(i).getStudentId() == record.getStudentId()) {
 
-            ps.setDouble(1, record.getCgpa());
-            ps.setString(2, record.getBranch());
-            ps.setInt(3, record.getSemester());
-            ps.setInt(4, record.getBacklogs());
-            ps.setInt(5, record.getStudentId());
-
-            return ps.executeUpdate() > 0;
+                records.set(i, record);
+                return true;
+            }
         }
+
+        return false;
     }
 
-    public boolean deleteAcademicRecord(int studentId) throws SQLException {
+    public boolean deleteAcademicRecord(int studentId) {
 
-        String sql = "DELETE FROM academic_records WHERE student_id = ?";
+        for (int i = 0; i < records.size(); i++) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (records.get(i).getStudentId() == studentId) {
 
-            ps.setInt(1, studentId);
-
-            return ps.executeUpdate() > 0;
+                records.remove(i);
+                return true;
+            }
         }
+
+        return false;
     }
 }
